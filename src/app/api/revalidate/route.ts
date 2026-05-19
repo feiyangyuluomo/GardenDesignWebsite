@@ -1,9 +1,9 @@
-import { revalidateTag } from 'next/cache'
+import { revalidateTag, revalidatePath } from 'next/cache'
 import { type NextRequest, NextResponse } from 'next/server'
 
 export async function POST(request: NextRequest) {
   const secret = request.headers.get('x-sanity-webhook-secret')
-  const expectedSecret = process.env.SANITY_WEBHOOK_SECRET
+  const expectedSecret = process.env.SANITY_REVALIDATE_SECRET
 
   if (expectedSecret && secret !== expectedSecret) {
     return NextResponse.json({ error: 'Invalid secret' }, { status: 401 })
@@ -17,20 +17,23 @@ export async function POST(request: NextRequest) {
       case 'siteSettings':
         revalidateTag('siteSettings')
         revalidateTag('home')
-        revalidateTag('contact')
-        revalidateTag('services')
+        revalidatePath('/')
+        revalidatePath('/contact')
         break
       case 'project':
         revalidateTag('projects')
         revalidateTag('home')
         revalidateTag('project-detail')
+        revalidatePath('/projects')
+        revalidatePath('/')
         break
       case 'service':
         revalidateTag('services')
-        revalidateTag('home')
+        revalidatePath('/services')
         break
       case 'article':
         revalidateTag('articles')
+        revalidatePath('/articles')
         break
     }
 

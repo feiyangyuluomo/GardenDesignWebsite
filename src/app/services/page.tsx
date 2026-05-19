@@ -93,8 +93,6 @@ export default async function ServicesPage() {
     // Use fallback data
   }
 
-  revalidateTag('services')
-
   return (
     <>
       {/* Hero */}

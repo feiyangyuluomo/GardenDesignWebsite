@@ -83,7 +83,5 @@ export default async function ProjectDetailPage({ params }: PageProps) {
     notFound()
   }
 
-  revalidateTag('project-detail')
-
   return <ProjectDetailClient project={project} />
 }

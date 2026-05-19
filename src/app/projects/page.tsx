@@ -124,7 +124,5 @@ export default async function ProjectsPage() {
     // Use fallback data
   }
 
-  revalidateTag('projects')
-
   return <ProjectsClient projects={projects} />
 }

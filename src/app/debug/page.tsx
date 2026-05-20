@@ -6,8 +6,8 @@ export default async function DebugPage() {
 
   try {
     data = await getServices()
-  } catch (e) {
-    error = e.message
+  } catch (e: any) {
+    error = e?.message || String(e)
   }
 
   return (

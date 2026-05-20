@@ -81,7 +81,7 @@ export default async function HomePage() {
       settings = {
         heroTitle: sanitySettings.heroTitle || fallbackSiteSettings.heroTitle,
         heroSubtitle: sanitySettings.heroSubtitle || fallbackSiteSettings.heroSubtitle,
-        heroImage: sanitySettings.heroImage?.asset?.url || fallbackSiteSettings.heroImage,
+        heroImage: sanitySettings.heroImageUrl || sanitySettings.heroImage?.asset?.url || fallbackSiteSettings.heroImage,
       }
     }
 

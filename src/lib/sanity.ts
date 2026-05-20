@@ -45,7 +45,7 @@ export async function getSiteSettings() {
       seoTitle,
       seoDescription
     }
-  `)
+  `, {}, { cache: 'no-store' }) // Disable CDN cache to get fresh data
 }
 
 // All Projects

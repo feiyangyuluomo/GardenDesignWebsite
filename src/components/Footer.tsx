@@ -37,6 +37,7 @@ export default function Footer({
               {[
                 { href: '/', label: '首页' },
                 { href: '/projects', label: '设计案例' },
+                { href: '/inspiration', label: '灵感文章' },
                 { href: '/services', label: '服务与报价' },
                 { href: '/about', label: '关于设计师' },
                 { href: '/contact', label: '联系我们' },

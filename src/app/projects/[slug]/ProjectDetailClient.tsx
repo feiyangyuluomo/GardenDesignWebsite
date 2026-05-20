@@ -14,17 +14,17 @@ interface ProjectDetailClientProps {
     area: string
     budgetRange?: string
     spaceType: string
-    styleTags: string[]
-    shortDescription: string
+    styleTags?: string[]
+    shortDescription?: string
     designBackground?: string
     painPoints?: string
     solution?: string
     plants?: string
     materials?: string
     lighting?: string
-    beforeImages: any[]
-    afterImages: any[]
-    gallery: any[]
+    beforeImages?: any[]
+    afterImages?: any[]
+    gallery?: any[]
     clientFeedback?: string
     heroVideo?: string
   }
@@ -33,7 +33,8 @@ interface ProjectDetailClientProps {
 export default function ProjectDetailClient({ project }: ProjectDetailClientProps) {
   const [isLoaded, setIsLoaded] = useState(false)
 
-  const spaceTypeLabel = SPACE_TYPES.find(t => t.value === project.spaceType)?.label || project.spaceType
+  const spaceTypeLabel = SPACE_TYPES.find(t => t.value === project.spaceType)?.label || project.spaceType || ''
+  const styleTags = project.styleTags || []
 
   // Only garden/landscape related images
   const heroImages = [
@@ -100,31 +101,35 @@ export default function ProjectDetailClient({ project }: ProjectDetailClientProp
       </section>
 
       {/* Project Info */}
-      <section className="py-8 bg-cream-warm border-b border-sage-light/30">
-        <div className="container-width">
-          <div className="flex flex-wrap gap-3">
-            {project.styleTags.map((tag) => (
-              <span
-                key={tag}
-                className="px-4 py-1.5 text-sm bg-cream rounded-full text-forest"
-              >
-                {tag}
-              </span>
-            ))}
+      {styleTags.length > 0 && (
+        <section className="py-8 bg-cream-warm border-b border-sage-light/30">
+          <div className="container-width">
+            <div className="flex flex-wrap gap-3">
+              {styleTags.map((tag) => (
+                <span
+                  key={tag}
+                  className="px-4 py-1.5 text-sm bg-cream rounded-full text-forest"
+                >
+                  {tag}
+                </span>
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* Short Description */}
-      <section className="py-12 md:py-16 bg-cream">
-        <div className="container-width">
-          <FadeInSection>
-            <p className="text-lg text-charcoal leading-relaxed max-w-3xl">
-              {project.shortDescription}
-            </p>
-          </FadeInSection>
-        </div>
-      </section>
+      {project.shortDescription && (
+        <section className="py-12 md:py-16 bg-cream">
+          <div className="container-width">
+            <FadeInSection>
+              <p className="text-lg text-charcoal leading-relaxed max-w-3xl">
+                {project.shortDescription}
+              </p>
+            </FadeInSection>
+          </div>
+        </section>
+      )}
 
       {/* Video */}
       {project.heroVideo && (

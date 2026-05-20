@@ -56,6 +56,7 @@ export async function getProjects() {
       title,
       slug,
       coverImage,
+      "coverImageUrl": coverImage.asset->url,
       city,
       area,
       budgetRange,
@@ -65,7 +66,7 @@ export async function getProjects() {
       featured,
       sortOrder
     }
-  `)
+  `, {}, { cache: 'no-store' })
 }
 
 // Featured Projects for homepage
@@ -93,7 +94,9 @@ export async function getProjectBySlug(slug: string) {
       title,
       slug,
       coverImage,
+      "coverImageUrl": coverImage.asset->url,
       heroVideo,
+      "heroVideoUrl": heroVideo.asset->url,
       city,
       area,
       budgetRange,
@@ -113,7 +116,7 @@ export async function getProjectBySlug(slug: string) {
       featured,
       sortOrder
     }
-  `, { slug })
+  `, { slug }, { cache: 'no-store' })
 }
 
 // All Services
@@ -129,7 +132,7 @@ export async function getServices() {
       description,
       sortOrder
     }
-  `)
+  `, {}, { cache: 'no-store' })
 }
 
 // Articles / Inspiration
@@ -142,7 +145,8 @@ export async function getArticles() {
       coverImage,
       category,
       summary,
-      publishDate
+      publishDate,
+      "coverImageUrl": coverImage.asset->url
     }
-  `)
+  `, {}, { cache: 'no-store' })
 }

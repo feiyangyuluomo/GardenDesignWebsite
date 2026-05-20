@@ -13,6 +13,20 @@ export const metadata: Metadata = {
 export default async function ContactPage() {
   revalidateTag('contact')
 
+  // Fetch site settings from Sanity
+  let wechatId = 'xidi_garden'
+  let wechatQrCodeUrl = ''
+
+  try {
+    const settings = await getSiteSettings()
+    if (settings) {
+      wechatId = settings.wechatId || wechatId
+      wechatQrCodeUrl = settings.wechatQrCodeUrl || ''
+    }
+  } catch (e) {
+    // Use fallback values
+  }
+
   return (
     <>
       {/* Hero */}
@@ -66,17 +80,29 @@ export default async function ContactPage() {
                 </p>
 
                 <div className="flex flex-col items-center">
-                  {/* QR Code Placeholder */}
-                  <div className="w-48 h-48 bg-sage-light/20 rounded-lg flex items-center justify-center mb-6">
-                    <div className="text-center">
-                      {wechatIcon({ className: 'w-16 h-16 text-sage mx-auto mb-2' })}
-                      <p className="text-xs text-stone">微信二维码</p>
+                  {/* QR Code */}
+                  {wechatQrCodeUrl ? (
+                    <div className="w-48 h-48 rounded-lg overflow-hidden mb-6">
+                      <Image
+                        src={wechatQrCodeUrl}
+                        alt="微信二维码"
+                        width={192}
+                        height={192}
+                        className="object-cover"
+                      />
                     </div>
-                  </div>
+                  ) : (
+                    <div className="w-48 h-48 bg-sage-light/20 rounded-lg flex items-center justify-center mb-6">
+                      <div className="text-center">
+                        {wechatIcon({ className: 'w-16 h-16 text-sage mx-auto mb-2' })}
+                        <p className="text-xs text-stone">微信二维码</p>
+                      </div>
+                    </div>
+                  )}
 
                   <div className="text-center">
                     <p className="text-sm text-stone mb-1">或搜索微信号</p>
-                    <p className="font-serif text-xl text-forest">xidi_garden</p>
+                    <p className="font-serif text-xl text-forest">{wechatId}</p>
                   </div>
                 </div>
               </div>

@@ -33,7 +33,7 @@ export async function POST(request: NextRequest) {
         break
       case 'article':
         revalidateTag('articles')
-        revalidatePath('/articles')
+        revalidatePath('/inspiration')
         break
     }
 

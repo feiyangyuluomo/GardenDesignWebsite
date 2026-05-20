@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
+import { revalidateTag } from 'next/cache'
 import Image from 'next/image'
 import { FadeInSection, arrowRightIcon } from '@/components'
 import { client } from '@/lib/sanity'
@@ -40,6 +41,8 @@ export async function generateMetadata({ params }: ArticlePageProps): Promise<Me
 }
 
 export default async function ArticlePage({ params }: ArticlePageProps) {
+  revalidateTag('articles')
+
   const { slug } = await params
   const article = await getArticleBySlug(slug).catch(() => null)
 

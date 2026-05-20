@@ -71,6 +71,7 @@ export default async function HomePage() {
   let settings = fallbackSiteSettings
   let featuredProjects = fallbackProjects
   let heroVideoUrl = ''
+  let heroVideoPoster = ''
 
   try {
     const [sanitySettings, sanityProjects] = await Promise.all([
@@ -85,6 +86,7 @@ export default async function HomePage() {
         heroImage: sanitySettings.heroImageUrl || sanitySettings.heroImage?.asset?.url || fallbackSiteSettings.heroImage,
       }
       heroVideoUrl = sanitySettings.heroVideoUrl || ''
+      heroVideoPoster = sanitySettings.heroVideoPosterUrl || ''
     }
 
     if (sanityProjects && sanityProjects.length > 0) {
@@ -261,7 +263,7 @@ export default async function HomePage() {
         <div className="container-width">
           <div className="max-w-4xl mx-auto">
             <FadeInSection>
-              <VideoPlayer src={heroVideoUrl} title="设计作品演示" />
+              <VideoPlayer src={heroVideoUrl} poster={heroVideoPoster} title="设计作品演示" />
             </FadeInSection>
           </div>
         </div>

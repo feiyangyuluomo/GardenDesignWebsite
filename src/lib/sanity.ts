@@ -35,6 +35,8 @@ export async function getSiteSettings() {
       heroVideo,
       "heroImageUrl": heroImage.asset->url,
       "heroVideoUrl": heroVideo.asset->url,
+      heroVideoPoster,
+      "heroVideoPosterUrl": heroVideoPoster.asset->url,
       wechatQrCode,
       "wechatQrCodeUrl": wechatQrCode.asset->url,
       wechatId,

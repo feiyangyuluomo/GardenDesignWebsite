@@ -1,12 +1,13 @@
 # 版本存档说明
 
-## 三个版本的发布时间线
+## 四个版本的发布时间线
 
 | 版本 | 时间 | 状态 |
 |-----|------|------|
 | [20260518_230956](20260518_230956/README.md) | 2026-05-18 23:09 | 初始版本 |
 | [20260519_084500](20260519_084500/README.md) | 2026-05-19 00:04 | Sanity CMS 集成 |
 | [20260519_220000](20260519_220000/README.md) | 2026-05-19 22:00 | 最终版本（可部署） |
+| [20260520_214500](20260520_214500/) | 2026-05-20 21:45 | 灵感页面+视频升级 |
 
 ---
 
@@ -91,6 +92,48 @@
 
 ---
 
+### v4.0 - 20260520_214500（灵感页面与视频播放器升级）
+
+**日期**: 2026-05-20
+
+**新增内容**:
+
+#### 1. 灵感文章页面
+- `src/app/inspiration/page.tsx` - 文章列表页
+- `src/app/inspiration/[slug]/page.tsx` - 文章详情页
+- 从 Sanity 获取文章列表，支持富文本内容渲染
+- 支持封面图、分类、标题、摘要、日期显示
+
+#### 2. 视频播放器升级
+- `src/components/VideoPlayer.tsx`
+- 新增播放/暂停按钮（中间大按钮 + 底部控制栏）
+- 进度条拖动跳转功能
+- 时间显示（当前时间 / 总时长）
+- 关闭/退出按钮
+- 鼠标悬停显示控制栏，3秒无操作自动隐藏
+
+#### 3. 首页视频集成
+- 从 siteSettings 获取 `heroVideoUrl` 和 `heroVideoPosterUrl`
+- 支持自定义视频封面图上传
+
+#### 4. 内容同步修复
+- 所有 Sanity 查询添加 `{ cache: 'no-store' }` 禁用 CDN 缓存
+- 确保每次访问获取最新数据
+
+#### 5. Studio Schema 更新
+- 新增 `heroVideoPoster` 字段用于视频封面图上传
+
+#### 6. 导航同步
+- Navigation 添加"灵感"菜单项
+- Footer 导航添加"灵感文章"，与顶部导航保持一致
+
+#### 7. 详情页修复
+- 修复文章详情页 404 问题
+- 修复项目详情页 Application Error 问题
+- 处理可选字段为空的情况
+
+---
+
 ## 版本升级路径
 
 ```
@@ -99,7 +142,11 @@ v1.0 (初始版本)
 v2.0 (添加 Sanity CMS)
     ↓  [修复 React 兼容问题]
 v3.0 (最终版本)
+    ↓
+v4.0 (灵感页面 + 视频升级 + 内容同步)
 ```
+
+---
 
 ## 如何在版本间切换
 
@@ -111,12 +158,28 @@ ls archive/
 cp -r archive/20260518_230956/* ./
 ```
 
+---
+
 ## 部署检查清单
 
 - [x] 代码构建成功（`npm run build`）
 - [x] 响应式设计适配（移动端/桌面端）
 - [x] 环境变量配置模板（`.env.local.example`）
 - [x] GitHub 仓库已创建
-- [ ] Vercel 部署
-- [ ] Sanity 项目创建
-- [ ] Sanity Webhook 配置
+- [x] Vercel 部署
+- [x] Sanity 项目创建
+- [x] Sanity Webhook 配置（待完善）
+
+---
+
+## Git 提交记录 (2026-05-20)
+
+| 提交 | 说明 |
+|------|------|
+| 588bea9 | Add version history and archive of today's changes |
+| d4bfa5e | Add video poster field and fix article detail page |
+| d3484a9 | Enhance VideoPlayer with full playback controls |
+| af13d63 | Fix article and project detail pages |
+| 95f5d2f | Use heroVideoUrl from siteSettings for homepage video section |
+| bc6858e | Add inspiration page and fix content sync issues |
+| bfe7d9f | Fix: disable CDN cache for siteSettings to get fresh data |

@@ -16,12 +16,16 @@ export default async function ContactPage() {
   // Fetch site settings from Sanity
   let wechatId = 'xidi_garden'
   let wechatQrCodeUrl = ''
+  let xiaohongshuLink = ''
+  let videoLink = ''
 
   try {
     const settings = await getSiteSettings()
     if (settings) {
       wechatId = settings.wechatId || wechatId
       wechatQrCodeUrl = settings.wechatQrCodeUrl || ''
+      xiaohongshuLink = settings.xiaohongshuLink || ''
+      videoLink = settings.videoLink || ''
     }
   } catch (e) {
     // Use fallback values
@@ -160,24 +164,28 @@ export default async function ContactPage() {
               </p>
 
               <div className="flex items-center justify-center gap-4">
-                <a
-                  href="#"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-2 px-6 py-3 bg-cream rounded-lg text-charcoal hover:bg-forest hover:text-cream-warm transition-colors duration-300"
-                >
-                  {xiaohongshuIcon({ className: 'w-5 h-5' })}
-                  <span className="text-sm font-medium">小红书</span>
-                </a>
-                <a
-                  href="#"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-2 px-6 py-3 bg-cream rounded-lg text-charcoal hover:bg-forest hover:text-cream-warm transition-colors duration-300"
-                >
-                  {videoIcon({ className: 'w-5 h-5' })}
-                  <span className="text-sm font-medium">视频号</span>
-                </a>
+                {xiaohongshuLink && (
+                  <a
+                    href={xiaohongshuLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 px-6 py-3 bg-cream rounded-lg text-charcoal hover:bg-forest hover:text-cream-warm transition-colors duration-300"
+                  >
+                    {xiaohongshuIcon({ className: 'w-5 h-5' })}
+                    <span className="text-sm font-medium">小红书</span>
+                  </a>
+                )}
+                {videoLink && (
+                  <a
+                    href={videoLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 px-6 py-3 bg-cream rounded-lg text-charcoal hover:bg-forest hover:text-cream-warm transition-colors duration-300"
+                  >
+                    {videoIcon({ className: 'w-5 h-5' })}
+                    <span className="text-sm font-medium">视频号</span>
+                  </a>
+                )}
               </div>
             </div>
           </FadeInSection>

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import { X, ChevronLeft, ChevronRight } from 'lucide-react'
 
@@ -19,7 +19,6 @@ interface ImageGalleryProps {
   title?: string
 }
 
-// Fallback placeholder images
 const PLACEHOLDER_SMALL = 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=80'
 const PLACEHOLDER_LARGE = 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1200&q=90'
 
@@ -41,18 +40,18 @@ export default function ImageGallery({ images, title }: ImageGalleryProps) {
     document.body.style.overflow = 'hidden'
   }
 
-  const closeLightbox = useCallback(() => {
+  const closeLightbox = () => {
     setLightboxOpen(false)
     document.body.style.overflow = ''
-  }, [])
+  }
 
-  const goToPrevious = useCallback(() => {
+  const goToPrevious = () => {
     setCurrentIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1))
-  }, [images.length])
+  }
 
-  const goToNext = useCallback(() => {
+  const goToNext = () => {
     setCurrentIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1))
-  }, [images.length])
+  }
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -64,7 +63,7 @@ export default function ImageGallery({ images, title }: ImageGalleryProps) {
 
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [lightboxOpen, closeLightbox, goToPrevious, goToNext])
+  }, [lightboxOpen, currentIndex])
 
   if (!images || images.length === 0) return null
 
@@ -75,7 +74,7 @@ export default function ImageGallery({ images, title }: ImageGalleryProps) {
           <button
             key={image._key || index}
             onClick={() => openLightbox(index)}
-            className="relative overflow-hidden rounded bg-sage-light/20 aspect-square group"
+            className="relative overflow-hidden rounded bg-sage-light/20 aspect-square group cursor-pointer"
           >
             <Image
               src={getImageUrl(image)}
@@ -96,16 +95,22 @@ export default function ImageGallery({ images, title }: ImageGalleryProps) {
           onClick={closeLightbox}
         >
           <button
-            onClick={closeLightbox}
-            className="absolute top-4 right-4 p-2 text-cream-warm/70 hover:text-cream-warm transition-colors duration-300"
+            onClick={(e) => {
+              e.stopPropagation()
+              closeLightbox()
+            }}
+            className="absolute top-4 right-4 p-2 text-cream-warm/70 hover:text-cream-warm transition-colors duration-300 z-10 cursor-pointer"
             aria-label="关闭"
           >
             <X size={24} strokeWidth={1.5} />
           </button>
 
           <button
-            onClick={(e) => { e.stopPropagation(); goToPrevious(); }}
-            className="absolute left-4 p-2 text-cream-warm/70 hover:text-cream-warm transition-colors duration-300"
+            onClick={(e) => {
+              e.stopPropagation()
+              goToPrevious()
+            }}
+            className="absolute left-4 p-2 text-cream-warm/70 hover:text-cream-warm transition-colors duration-300 z-10 cursor-pointer"
             aria-label="上一张"
           >
             <ChevronLeft size={32} strokeWidth={1.5} />
@@ -125,14 +130,17 @@ export default function ImageGallery({ images, title }: ImageGalleryProps) {
           </div>
 
           <button
-            onClick={(e) => { e.stopPropagation(); goToNext(); }}
-            className="absolute right-4 p-2 text-cream-warm/70 hover:text-cream-warm transition-colors duration-300"
+            onClick={(e) => {
+              e.stopPropagation()
+              goToNext()
+            }}
+            className="absolute right-4 p-2 text-cream-warm/70 hover:text-cream-warm transition-colors duration-300 z-10 cursor-pointer"
             aria-label="下一张"
           >
             <ChevronRight size={32} strokeWidth={1.5} />
           </button>
 
-          <div className="absolute bottom-8 left-1/2 -translate-x-1/2 text-cream-warm/70 text-sm">
+          <div className="absolute bottom-8 left-1/2 -translate-x-1/2 text-cream-warm/70 text-sm z-10">
             {currentIndex + 1} / {images.length}
           </div>
         </div>

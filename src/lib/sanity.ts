@@ -111,12 +111,25 @@ export async function getProjectBySlug(slug: string) {
       plants,
       materials,
       lighting,
-      beforeImages,
-      afterImages,
-      gallery,
       clientFeedback,
       featured,
-      sortOrder
+      sortOrder,
+      beforeImages[]{
+        _key,
+        "url": asset->url,
+        "alt": alt
+      },
+      afterImages[]{
+        _key,
+        "url": asset->url,
+        "alt": alt
+      },
+      gallery[]{
+        _key,
+        "url": asset->url,
+        "alt": alt,
+        "caption": caption
+      }
     }
   `, { slug }, { cache: 'no-store' })
 }

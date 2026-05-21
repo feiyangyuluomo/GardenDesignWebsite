@@ -7,13 +7,20 @@ import { FadeInSection, VideoPlayer, ImageGallery } from '@/components'
 import { SPACE_TYPES } from '@/types'
 import { arrowRightIcon } from '@/components/Icons'
 
+interface ProjectImage {
+  _key?: string
+  url?: string
+  alt?: string
+  caption?: string
+}
+
 interface ProjectDetailClientProps {
   project: {
     title: string
-    city: string
-    area: string
+    city?: string
+    area?: string
     budgetRange?: string
-    spaceType: string
+    spaceType?: string
     styleTags?: string[]
     shortDescription?: string
     designBackground?: string
@@ -22,13 +29,17 @@ interface ProjectDetailClientProps {
     plants?: string
     materials?: string
     lighting?: string
-    beforeImages?: any[]
-    afterImages?: any[]
-    gallery?: any[]
     clientFeedback?: string
     heroVideo?: string
+    coverImageUrl?: string
+    beforeImages?: ProjectImage[]
+    afterImages?: ProjectImage[]
+    gallery?: ProjectImage[]
   }
 }
+
+// Fallback placeholder image
+const PLACEHOLDER_IMAGE = 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1920&q=80'
 
 export default function ProjectDetailClient({ project }: ProjectDetailClientProps) {
   const [isLoaded, setIsLoaded] = useState(false)
@@ -36,33 +47,8 @@ export default function ProjectDetailClient({ project }: ProjectDetailClientProp
   const spaceTypeLabel = SPACE_TYPES.find(t => t.value === project.spaceType)?.label || project.spaceType || ''
   const styleTags = project.styleTags || []
 
-  // Only garden/landscape related images
-  const heroImages = [
-    'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1920&q=80', // garden pathway
-    'https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?w=1920&q=80', // villa garden
-    'https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=1920&q=80', // greenhouse plants
-    'https://images.unsplash.com/photo-1591857177580-dc82b9ac4e1e?w=1920&q=80', // botanical garden
-    'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1920&q=80', // residential with garden
-    'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1920&q=80', // backyard garden
-    'https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=1920&q=80', // outdoor terrace
-    'https://images.unsplash.com/photo-1599619351208-3e6c839d6828?w=1920&q=80', // courtyard
-    'https://images.unsplash.com/photo-1583791030153-b5f7b1f4e9c2?w=1920&q=80', // garden plants
-  ]
-
-  // Before/After images - all garden related
-  const beforeImages = [
-    'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=400&q=80', // residential exterior
-    'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=400&q=80', // backyard before
-  ]
-
-  const afterImages = [
-    'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&q=80', // garden after 1
-    'https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?w=400&q=80', // garden after 2
-  ]
-
-  const titleHash = project.title.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0)
-  const heroImageIndex = titleHash % heroImages.length
-  const heroImageSrc = heroImages[heroImageIndex]
+  // Hero image: priority is coverImageUrl -> afterImages[0].url -> placeholder
+  const heroImageUrl = project.coverImageUrl || project.afterImages?.[0]?.url || PLACEHOLDER_IMAGE
 
   return (
     <>
@@ -70,7 +56,7 @@ export default function ProjectDetailClient({ project }: ProjectDetailClientProp
       <section className="relative h-[60vh] min-h-[400px] flex items-end">
         <div className="absolute inset-0">
           <Image
-            src={heroImageSrc}
+            src={heroImageUrl}
             alt={project.title}
             fill
             priority
@@ -85,11 +71,15 @@ export default function ProjectDetailClient({ project }: ProjectDetailClientProp
         <div className="relative z-10 container-width pb-12 text-cream-warm">
           <h1 className="font-serif text-4xl md:text-5xl mb-4">{project.title}</h1>
           <div className="flex flex-wrap items-center gap-4 text-sm text-cream-warm/80">
-            <span>{project.city}</span>
-            <span className="w-1 h-1 rounded-full bg-cream-warm/50" />
-            <span>{project.area}</span>
-            <span className="w-1 h-1 rounded-full bg-cream-warm/50" />
-            <span>{spaceTypeLabel}</span>
+            {project.city && <span>{project.city}</span>}
+            {project.city && project.area && <span className="w-1 h-1 rounded-full bg-cream-warm/50" />}
+            {project.area && <span>{project.area}</span>}
+            {project.spaceType && spaceTypeLabel && (
+              <>
+                {(project.city || project.area) && <span className="w-1 h-1 rounded-full bg-cream-warm/50" />}
+                <span>{spaceTypeLabel}</span>
+              </>
+            )}
             {project.budgetRange && (
               <>
                 <span className="w-1 h-1 rounded-full bg-cream-warm/50" />
@@ -198,15 +188,19 @@ export default function ProjectDetailClient({ project }: ProjectDetailClientProp
                 <div>
                   <h3 className="text-sm text-stone mb-4">改造前</h3>
                   <div className="grid grid-cols-2 gap-3">
-                    {project.beforeImages.map((img: any, i: number) => (
-                      <div key={i} className="relative aspect-square rounded overflow-hidden bg-sage-light/20">
-                        <Image
-                          src={beforeImages[i % beforeImages.length]}
-                          alt={`改造前 ${i + 1}`}
-                          fill
-                          className="object-cover"
-                          sizes="(max-width: 768px) 50vw, 25vw"
-                        />
+                    {project.beforeImages.map((img, i) => (
+                      <div key={img._key || i} className="relative aspect-square rounded overflow-hidden bg-sage-light/20">
+                        {img.url ? (
+                          <Image
+                            src={img.url}
+                            alt={img.alt || `改造前 ${i + 1}`}
+                            fill
+                            className="object-cover"
+                            sizes="(max-width: 768px) 50vw, 25vw"
+                          />
+                        ) : (
+                          <div className="absolute inset-0 bg-sage-light/30" />
+                        )}
                       </div>
                     ))}
                   </div>
@@ -217,15 +211,19 @@ export default function ProjectDetailClient({ project }: ProjectDetailClientProp
                 <div>
                   <h3 className="text-sm text-stone mb-4">改造后</h3>
                   <div className="grid grid-cols-2 gap-3">
-                    {project.afterImages.map((img: any, i: number) => (
-                      <div key={i} className="relative aspect-square rounded overflow-hidden bg-sage-light/20">
-                        <Image
-                          src={afterImages[i % afterImages.length]}
-                          alt={`改造后 ${i + 1}`}
-                          fill
-                          className="object-cover"
-                          sizes="(max-width: 768px) 50vw, 25vw"
-                        />
+                    {project.afterImages.map((img, i) => (
+                      <div key={img._key || i} className="relative aspect-square rounded overflow-hidden bg-sage-light/20">
+                        {img.url ? (
+                          <Image
+                            src={img.url}
+                            alt={img.alt || `改造后 ${i + 1}`}
+                            fill
+                            className="object-cover"
+                            sizes="(max-width: 768px) 50vw, 25vw"
+                          />
+                        ) : (
+                          <div className="absolute inset-0 bg-sage-light/30" />
+                        )}
                       </div>
                     ))}
                   </div>

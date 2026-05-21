@@ -5,16 +5,30 @@ import Image from 'next/image'
 import { X, ChevronLeft, ChevronRight } from 'lucide-react'
 
 interface ImageItem {
-  _type: 'image'
-  asset: {
-    _ref: string
-  }
+  _key?: string
+  url?: string
   alt?: string
+  caption?: string
+  asset?: {
+    url?: string
+  }
 }
 
 interface ImageGalleryProps {
   images: ImageItem[]
   title?: string
+}
+
+// Fallback placeholder images
+const PLACEHOLDER_SMALL = 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=80'
+const PLACEHOLDER_LARGE = 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1200&q=90'
+
+function getImageUrl(img: ImageItem): string {
+  return img.url || img.asset?.url || PLACEHOLDER_SMALL
+}
+
+function getLargeImageUrl(img: ImageItem): string {
+  return img.url || img.asset?.url || PLACEHOLDER_LARGE
 }
 
 export default function ImageGallery({ images, title }: ImageGalleryProps) {
@@ -54,42 +68,17 @@ export default function ImageGallery({ images, title }: ImageGalleryProps) {
 
   if (!images || images.length === 0) return null
 
-  // Only garden/landscape related images
-  const galleryImages = [
-    'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=80', // garden pathway
-    'https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?w=600&q=80', // villa garden
-    'https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=600&q=80', // greenhouse
-    'https://images.unsplash.com/photo-1591857177580-dc82b9ac4e1e?w=600&q=80', // botanical
-    'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=600&q=80', // house garden
-    'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=600&q=80', // backyard
-    'https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=600&q=80', // terrace
-    'https://images.unsplash.com/photo-1599619351208-3e6c839d6828?w=600&q=80', // courtyard
-    'https://images.unsplash.com/photo-1583791030153-b5f7b1f4e9c2?w=600&q=80', // garden plants
-  ]
-
-  const lightboxImages = [
-    'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1200&q=90', // garden pathway
-    'https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?w=1200&q=90', // villa garden
-    'https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=1200&q=90', // greenhouse
-    'https://images.unsplash.com/photo-1591857177580-dc82b9ac4e1e?w=1200&q=90', // botanical
-    'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1200&q=90', // house garden
-    'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1200&q=90', // backyard
-    'https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=1200&q=90', // terrace
-    'https://images.unsplash.com/photo-1599619351208-3e6c839d6828?w=1200&q=90', // courtyard
-    'https://images.unsplash.com/photo-1583791030153-b5f7b1f4e9c2?w=1200&q=90', // garden plants
-  ]
-
   return (
     <>
       <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
         {images.map((image, index) => (
           <button
-            key={index}
+            key={image._key || index}
             onClick={() => openLightbox(index)}
             className="relative overflow-hidden rounded bg-sage-light/20 aspect-square group"
           >
             <Image
-              src={galleryImages[index % galleryImages.length]}
+              src={getImageUrl(image)}
               alt={image.alt || `${title} - 图片 ${index + 1}`}
               fill
               className="object-cover transition-transform duration-500 ease-gentle group-hover:scale-105"
@@ -127,8 +116,8 @@ export default function ImageGallery({ images, title }: ImageGalleryProps) {
             onClick={(e) => e.stopPropagation()}
           >
             <Image
-              src={lightboxImages[currentIndex % lightboxImages.length]}
-              alt={`${title} - 图片 ${currentIndex + 1}`}
+              src={getLargeImageUrl(images[currentIndex])}
+              alt={images[currentIndex].alt || `${title} - 图片 ${currentIndex + 1}`}
               width={1200}
               height={800}
               className="object-contain max-h-[80vh] w-auto h-auto"

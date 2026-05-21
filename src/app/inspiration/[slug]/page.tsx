@@ -73,7 +73,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
 
       {/* Cover Image */}
       {article.coverImageUrl && (
-        <section className="relative aspect-[16/9] bg-sage-light/20">
+        <section className="relative aspect-[4/1] bg-sage-light/20">
           <Image
             src={article.coverImageUrl}
             alt={article.title}

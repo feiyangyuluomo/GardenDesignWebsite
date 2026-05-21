@@ -106,17 +106,45 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
               {article.content.map((block: any, i: number) => {
                 if (block._type === 'block') {
                   const style = block.style || 'normal'
-                  const text = block.children?.map((child: any) => child.text).join('') || ''
+                  const children = block.children?.map((child: any) => {
+                    let text = child.text
+                    const marks = child.marks || []
+
+                    // Handle marks (bold, italic, underline, links)
+                    if (marks.length > 0) {
+                      marks.forEach((markId: string) => {
+                        if (markId === 'strong') {
+                          text = <strong key={markId}>{text}</strong>
+                        } else if (markId === 'em') {
+                          text = <em key={markId}>{text}</em>
+                        } else if (markId === 'underline') {
+                          text = <u key={markId}>{text}</u>
+                        } else {
+                          // Check if it's a link annotation
+                          const linkMark = block.markDefs?.find((def: any) => def._key === markId)
+                          if (linkMark) {
+                            text = (
+                              <a key={markId} href={linkMark.href} className="text-forest underline hover:text-forest-dark">
+                                {text}
+                              </a>
+                            )
+                          }
+                        }
+                      })
+                    }
+
+                    return <span key={i}>{text}</span>
+                  })
 
                   switch (style) {
                     case 'h2':
-                      return <h2 key={i} className="font-serif text-2xl text-charcoal mt-12 mb-6">{text}</h2>
+                      return <h2 key={i} className="font-serif text-2xl text-charcoal mt-12 mb-6">{children}</h2>
                     case 'h3':
-                      return <h3 key={i} className="font-serif text-xl text-charcoal mt-8 mb-4">{text}</h3>
+                      return <h3 key={i} className="font-serif text-xl text-charcoal mt-8 mb-4">{children}</h3>
                     case 'blockquote':
-                      return <blockquote key={i} className="border-l-4 border-sage pl-6 italic text-stone my-6">{text}</blockquote>
+                      return <blockquote key={i} className="border-l-4 border-sage pl-6 italic text-stone my-6">{children}</blockquote>
                     default:
-                      return <p key={i} className="text-charcoal leading-relaxed mb-4">{text}</p>
+                      return <p key={i} className="text-charcoal leading-relaxed mb-4">{children}</p>
                   }
                 }
                 if (block._type === 'image' && block.asset?.url) {

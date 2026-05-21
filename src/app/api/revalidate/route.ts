@@ -34,6 +34,9 @@ export async function POST(request: NextRequest) {
       case 'article':
         revalidateTag('articles')
         revalidatePath('/inspiration')
+        if (body.slug?.current) {
+          revalidatePath(`/inspiration/${body.slug.current}`)
+        }
         break
     }
 

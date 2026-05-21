@@ -18,6 +18,7 @@ export default async function ContactPage() {
   let wechatQrCodeUrl = ''
   let xiaohongshuLink = ''
   let videoLink = ''
+  let questionnaireLink = ''
 
   try {
     const settings = await getSiteSettings()
@@ -26,6 +27,7 @@ export default async function ContactPage() {
       wechatQrCodeUrl = settings.wechatQrCodeUrl || ''
       xiaohongshuLink = settings.xiaohongshuLink || ''
       videoLink = settings.videoLink || ''
+      questionnaireLink = settings.questionnaireLink || ''
     }
   } catch (e) {
     // Use fallback values
@@ -61,15 +63,25 @@ export default async function ContactPage() {
                 </p>
 
                 <div className="space-y-4">
-                  <a
-                    href="#"
-                    className="btn-primary bg-cream-warm text-forest hover:bg-cream hover:text-forest-dark w-full text-center"
-                  >
-                    跳转到问卷星填写
-                  </a>
-                  <p className="text-xs text-cream-warm/60 text-center">
-                    问卷星链接跳转 · 预计填写时间 3-5 分钟
-                  </p>
+                  {questionnaireLink ? (
+                    <a
+                      href={questionnaireLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="btn-primary bg-cream-warm text-forest hover:bg-cream hover:text-forest-dark w-full text-center"
+                    >
+                      跳转到问卷星填写
+                    </a>
+                  ) : (
+                    <span className="btn-primary bg-stone/30 text-stone/50 w-full text-center block cursor-not-allowed">
+                      问卷链接暂未配置
+                    </span>
+                  )}
+                  {questionnaireLink && (
+                    <p className="text-xs text-cream-warm/60 text-center">
+                      问卷星链接跳转 · 预计填写时间 3-5 分钟
+                    </p>
+                  )}
                 </div>
               </div>
             </FadeInSection>

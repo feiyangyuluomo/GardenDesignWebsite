@@ -79,13 +79,14 @@ export async function getFeaturedProjects() {
       title,
       slug,
       coverImage,
+      "coverImageUrl": coverImage.asset->url,
       city,
       area,
       spaceType,
       styleTags,
       shortDescription
     }
-  `)
+  `, {}, { cache: 'no-store' })
 }
 
 // Single Project by slug

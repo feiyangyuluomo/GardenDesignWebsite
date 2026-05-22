@@ -15,7 +15,7 @@
   }
 
   ::selection {
-    @apply bg-forest/20 text-forest;
+    @apply bg-sage/30 text-charcoal;
   }
 
   ::-webkit-scrollbar {

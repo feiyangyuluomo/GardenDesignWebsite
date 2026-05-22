@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import './globals.css'
 import { Navigation, Footer } from '@/components'
+import { getSiteSettings } from '@/lib/sanity'
 
 export const metadata: Metadata = {
   title: {
@@ -16,17 +17,30 @@ export const metadata: Metadata = {
   },
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
+  // Fetch site settings for Footer
+  let siteSettings = null
+  try {
+    siteSettings = await getSiteSettings()
+  } catch (e) {
+    // Use empty settings
+  }
+
   return (
     <html lang="zh-CN" className="h-full">
       <body className="min-h-full flex flex-col antialiased">
         <Navigation />
         <main className="flex-1">{children}</main>
-        <Footer />
+        <Footer
+          wechatId={siteSettings?.wechatId}
+          xiaohongshuLink={siteSettings?.xiaohongshuLink}
+          videoLink={siteSettings?.videoLink}
+          phone={siteSettings?.phone}
+        />
       </body>
     </html>
   )

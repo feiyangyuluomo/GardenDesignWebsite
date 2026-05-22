@@ -154,7 +154,7 @@ export default async function ContactPage() {
             ].map((item, index) => (
               <FadeInSection key={item.step} delay={index * 100}>
                 <div className="text-center">
-                  <span className="font-display text-4xl text-sage-light/80 mb-4 block">{item.step}</span>
+                  <span className="font-display text-4xl text-sage mb-4 block">{item.step}</span>
                   <h3 className="font-serif text-lg text-charcoal mb-2">{item.title}</h3>
                   <p className="text-sm text-stone leading-relaxed">{item.desc}</p>
                 </div>
